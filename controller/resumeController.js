@@ -6,6 +6,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 import { generateGeminiSummary } from '../utils/gemini.js';
 import fetch from 'node-fetch';
+import pkg from 'pdfjs-dist';
+const { getDocument } = pkg;
 // import pdfParse from 'pdf-parse';
 
 
@@ -153,12 +155,17 @@ export const analyzeResume = async (req, res) => {
     // 3. Parse PDF
     let buffer, pdfText;
     try {
-      // buffer = await fileRes.arrayBuffer();
-      // pdfText = await pdfParse(Buffer.from(buffer));
       buffer = await fileRes.arrayBuffer();
-const pdfParse = (await import('pdf-parse')).default; // 👈 dynamic import
-pdfText = await pdfParse(Buffer.from(buffer));
-
+      // Use pdfjs-dist to extract text
+      const loadingTask = getDocument({ data: buffer });
+      const pdf = await loadingTask.promise;
+      let textContent = '';
+      for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+        const page = await pdf.getPage(pageNum);
+        const content = await page.getTextContent();
+        textContent += content.items.map(item => item.str).join(' ') + '\n';
+      }
+      pdfText = { text: textContent };
       if (!pdfText.text || !pdfText.text.trim()) throw new Error('PDF parsing returned empty text');
     } catch (err) {
       console.error('PDF parsing failed:', err);
