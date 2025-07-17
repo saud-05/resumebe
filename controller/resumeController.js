@@ -7,7 +7,7 @@ dotenv.config();
 import { generateGeminiSummary } from '../utils/gemini.js';
 import fetch from 'node-fetch';
 // import pdfParse from 'pdf-parse';
-const pdfParse = (await import('pdf-parse')).default;
+
 
 // Validate required AWS env variables
 if (!process.env.AWS_REGION || !process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY || !process.env.AWS_S3_BUCKET) {
