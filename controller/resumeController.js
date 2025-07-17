@@ -6,7 +6,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 import { generateGeminiSummary } from '../utils/gemini.js';
 import fetch from 'node-fetch';
-import pdfParse from 'pdf-parse';
+// import pdfParse from 'pdf-parse';
+const pdfParse = (await import('pdf-parse')).default;
 
 // Validate required AWS env variables
 if (!process.env.AWS_REGION || !process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY || !process.env.AWS_S3_BUCKET) {
@@ -152,8 +153,12 @@ export const analyzeResume = async (req, res) => {
     // 3. Parse PDF
     let buffer, pdfText;
     try {
+      // buffer = await fileRes.arrayBuffer();
+      // pdfText = await pdfParse(Buffer.from(buffer));
       buffer = await fileRes.arrayBuffer();
-      pdfText = await pdfParse(Buffer.from(buffer));
+const pdfParse = (await import('pdf-parse')).default; // 👈 dynamic import
+pdfText = await pdfParse(Buffer.from(buffer));
+
       if (!pdfText.text || !pdfText.text.trim()) throw new Error('PDF parsing returned empty text');
     } catch (err) {
       console.error('PDF parsing failed:', err);
