@@ -16,6 +16,7 @@ export async function generateGeminiSummary(text, jobDescription) {
     - Point out any gaps or missing requirements.
     - Assess the overall fit for the role.
     - End with a simple recommendation: "Strong Fit", "Potential Fit", or "Not a Fit".
+    -nothing after this 
     
     Resume:
     ${text}
