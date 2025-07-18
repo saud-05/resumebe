@@ -27,5 +27,5 @@ model Resume {
   filePath   String
   uploadedAt DateTime @default(now())
   aiSummary  String?   
-  // jobDescription String?
+  jobDescription String?
 }

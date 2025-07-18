@@ -129,7 +129,6 @@ export const deleteResume = async (req, res) => {
 export const analyzeResume = async (req, res) => {
   try {
     const { id } = req.params;
-    const { jobDescription } = req.body; // Accept jobDescription as plain text
     // 1. Find resume in DB
     let resume;
     try {
@@ -176,13 +175,7 @@ export const analyzeResume = async (req, res) => {
     // 4. Call Gemini
     let summary;
     try {
-      if (jobDescription && jobDescription.trim()) {
-        // Compare resume with job description
-        summary = await generateGeminiSummary(pdfText.text, jobDescription);
-      } else {
-        // Professional summary only
-        summary = await generateGeminiSummary(pdfText.text);
-      }
+      summary = await generateGeminiSummary(pdfText.text);
       if (!summary) throw new Error('Gemini did not return a summary');
     } catch (err) {
       console.error('Gemini API error:', err);
